@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -32,6 +33,25 @@ class DB_Helper {
         "INSERT INTO budget(category_name,category_image) VALUES(?,?):";
     List arg = [dbModel.category_name, dbModel.category_image];
     int? res = await db?.rawInsert(query, arg);
+    return res;
+  }
+
+  Future<List<BudgetModel>> fetchAllData() async {
+    await initdB();
+    String query = "SELECT * FROM budget;";
+    List<Map<String, dynamic>>? responce = await db?.rawQuery(query);
+
+    List<BudgetModel> allData =
+        responce!.map((e) => BudgetModel.fromSQL(data: e)).toList();
+    return allData;
+  }
+
+  Future<int?> DeleteData({required int id}) async {
+    await initdB();
+    String Query = "DELETE FROM budget WHERE id = ?";
+    List args = [id];
+
+    int? res = await db?.rawDelete(Query, args);
     return res;
   }
 }

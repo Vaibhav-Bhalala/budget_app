@@ -1,10 +1,7 @@
-import 'dart:typed_data';
-
 import 'package:budget_app/views/helper_class.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-
 import '../models/budeget_models.dart';
 import 'globals.dart';
 
@@ -64,34 +61,32 @@ class _Add_CategoryState extends State<Add_Category> {
                 ),
               )),
           Expanded(
-              flex: 8,
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 5,
-                            mainAxisSpacing: 5),
-                    itemCount: Globals.allImages.length,
-                    itemBuilder: (context, i) => GestureDetector(
-                          onTap: () async {
-                            imgbytes =
-                                await rootBundle.load(Globals.allImages[i]);
-                          },
-                          child: Container(
-                            height: 200,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage(
-                                  Globals.allImages[i],
-                                ),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        )),
-              ))
+            flex: 8,
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, crossAxisSpacing: 5, mainAxisSpacing: 5),
+                itemCount: Globals.allImages.length,
+                itemBuilder: (context, i) => GestureDetector(
+                  onTap: () async {
+                    imgbytes = await rootBundle.load(Globals.allImages[i]);
+                  },
+                  child: Container(
+                    height: 200,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(
+                          Globals.allImages[i],
+                        ),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
