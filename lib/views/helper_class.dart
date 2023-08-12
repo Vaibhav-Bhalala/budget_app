@@ -1,3 +1,4 @@
+import 'package:budget_app/models/spending_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -22,7 +23,7 @@ class DB_Helper {
       version: 1,
       onCreate: (Database db, int version) async {
         await db.execute(
-            "CREATE TABLE budget(category_name TEXT,category_image TEXT)");
+            "CREATE TABLE IF NOT EXISTS budget(id INTEGER PRIMARY KEY AUTOINCRIMENT,category_name TEXT,category_image BLOB)");
       },
     );
   }
@@ -53,5 +54,43 @@ class DB_Helper {
 
     int? res = await db?.rawDelete(Query, args);
     return res;
+  }
+
+  Future<List<BudgetModel>?> FatchSearchData({String data = ""}) async {
+    await initdB();
+    String Query = "SELECT * FEOM budget WHERE category_name LIKE '%$data%';";
+
+    List<Map<String, dynamic>>? res = await db?.rawQuery(Query);
+
+    List<BudgetModel>? SearchData =
+        await res?.map((e) => BudgetModel.fromSQL(data: e)).toList();
+
+    return SearchData;
+  }
+
+  Future<int?> addSpending({required Spending_Model data}) async {
+    await initdB();
+    String query =
+        "INSERT INTO spending(spending_name,spending_amount,spending_mode,spending_type,spending_date,spending_time)VALUES(?,?,?,?,?,?):";
+    List arg = [
+      data.spending_name,
+      data.spending_amount,
+      data.spending_mode,
+      data.spending_type,
+      data.date,
+      data.time
+    ];
+    int? res = await db?.rawInsert(query, arg);
+    return res;
+  }
+
+  Future<List<Spending_Model>> fatchSpending() async {
+    await initdB();
+    String Query = "SELECT * FROM spending";
+    List<Map<String, dynamic>>? response = await db?.rawQuery(Query);
+
+    List<Spending_Model> allData =
+        response!.map((e) => Spending_Model.fromMap(data: e)).toList();
+    return allData;
   }
 }
